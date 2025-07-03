@@ -62,6 +62,7 @@ class Game:
         self.create_items()
         self.create_characters()
         self.connect_rooms()
+        self.create_room_art()
 
     def create_rooms(self):
         """Create all rooms in the game"""
@@ -98,6 +99,22 @@ class Game:
             "A forbidding underground chamber with stone walls slick with moisture. "
             "The air is cold and heavy with the weight of centuries.")
 
+        self.rooms["lake"] = Room("Crystal Lake",
+            "A serene lake whose surface shimmers with an inner light. Gentle "
+            "waves lap at the shore, reflecting the sky like a mirror.")
+
+        self.rooms["castle"] = Room("Moonstone Castle",
+            "A majestic stone castle crowned with soaring turrets. Banners of "
+            "deep blue flutter proudly in the breeze.")
+
+        self.rooms["library"] = Room("Arcane Library",
+            "Rows upon rows of ancient tomes stretch into the shadows. The air "
+            "smells of parchment and secrets long forgotten.")
+
+        self.rooms["summit"] = Room("Stormy Summit",
+            "The very peak of the wizard's tower where clouds swirl around you. "
+            "From here the whole realm is spread out below.")
+
     def create_items(self):
         """Create all items and place them in rooms"""
         
@@ -106,9 +123,12 @@ class Game:
                       "The journal reveals hints about a powerful amulet hidden in the ancient dungeon.")
         map_item = Item("map", "A hand-drawn map showing various locations around the mystical realm.", True,
                        "The map reveals secret paths and marks the location of the wizard's tower.")
-        
+        lantern = Item("lantern", "An old brass lantern that still holds a warm glow.", True,
+                        "The lantern casts a comforting light around you.")
+
         self.rooms["cabin"].items["journal"] = journal
         self.rooms["cabin"].items["map"] = map_item
+        self.rooms["cabin"].items["lantern"] = lantern
         
         # Forest items  
         mushroom = Item("mushroom", "A glowing purple mushroom that pulses with magical energy.", True,
@@ -137,8 +157,28 @@ class Game:
         # Dungeon items
         sword = Item("sword", "A gleaming enchanted sword with runes etched along the blade.", True,
                     "The sword feels perfectly balanced in your hand, ready for battle.")
-        
+
         self.rooms["dungeon"].items["sword"] = sword
+
+        # Lake items
+        pearl = Item("pearl", "A luminous pearl said to hold the whispers of the sea.", True,
+                     "The pearl's glow fills you with calm strength.")
+        self.rooms["lake"].items["pearl"] = pearl
+
+        # Castle items
+        shield = Item("shield", "A sturdy shield emblazoned with the crest of Moonstone Castle.", True,
+                       "You feel safer just holding the shield.")
+        self.rooms["castle"].items["shield"] = shield
+
+        # Library items
+        tome = Item("tome", "A dusty tome containing forgotten spells.", True,
+                     "Reading the tome deepens your understanding of magic, empowering your amulet.")
+        self.rooms["library"].items["tome"] = tome
+
+        # Summit items
+        feather = Item("feather", "A feather from a mythical storm eagle.", True,
+                        "The feather crackles with energy, bolstering your courage.")
+        self.rooms["summit"].items["feather"] = feather
 
     def create_characters(self):
         """Create all characters and place them in rooms"""
@@ -183,6 +223,26 @@ class Game:
         
         self.rooms["dungeon"].characters["guardian"] = guardian
 
+        # Lake character
+        fisherman = Character("fisherman", "A weathered fisherman patiently casting his line into the glowing waters.",
+                              {"talk": "The fisherman says: 'Legend speaks of pearls that grant bravery. Perhaps you'll find one here.'"})
+        self.rooms["lake"].characters["fisherman"] = fisherman
+
+        # Castle character
+        queen = Character("queen", "The regal queen of Moonstone Castle, draped in silver robes.",
+                           {"talk": "The queen smiles: 'Brave Megan, our realm depends on your success. Take this shield with honor.'"})
+        self.rooms["castle"].characters["queen"] = queen
+
+        # Library character
+        librarian = Character("librarian", "An elderly keeper of knowledge with spectacles perched on her nose.",
+                               {"talk": "The librarian whispers: 'Within these pages lie spells of great power.'"})
+        self.rooms["library"].characters["librarian"] = librarian
+
+        # Summit character
+        eagle = Character("eagle", "A majestic storm eagle perched proudly, its feathers crackling with static.",
+                           {"talk": "The eagle screeches defiantly, as if urging you to greater heights."})
+        self.rooms["summit"].characters["eagle"] = eagle
+
     def connect_rooms(self):
         """Set up exits between rooms"""
         
@@ -194,21 +254,62 @@ class Game:
         
         # Clearing connections
         self.rooms["clearing"].exits = {"west": "forest", "north": "tower"}
-        
+
+        # Lake connections
+        self.rooms["lake"].exits = {"west": "clearing"}
+
         # Cave connections
         self.rooms["cave"].exits = {"east": "forest", "down": "dungeon"}
         
         # Village connections
-        self.rooms["village"].exits = {"north": "cabin", "east": "tavern"}
-        
+        self.rooms["village"].exits = {"north": "cabin", "east": "tavern", "south": "castle"}
+
         # Tavern connections
         self.rooms["tavern"].exits = {"west": "village"}
         
         # Tower connections
-        self.rooms["tower"].exits = {"south": "clearing"}
-        
+        self.rooms["tower"].exits = {"south": "clearing", "north": "summit"}
+
         # Dungeon connections
         self.rooms["dungeon"].exits = {"up": "cave"}
+
+        # Castle connections
+        self.rooms["castle"].exits = {"north": "village", "east": "library"}
+
+        # Library connections
+        self.rooms["library"].exits = {"west": "castle"}
+
+        # Summit connections
+        self.rooms["summit"].exits = {"south": "tower"}
+
+    def create_room_art(self):
+        """ASCII art for rooms"""
+        self.room_art = {
+            "cabin": (
+                "\033[33m"
+                "  /\\\n"
+                " /__\\\n"
+                " |[]|\n"
+                "\033[0m"
+            ),
+            "forest": (
+                "\033[32m"
+                "  &&&\n"
+                " &&&&&\n"
+                "  &&&\n"
+                "\033[0m"
+            ),
+            "clearing": "\033[32m( )\n /_\\\n\033[0m",
+            "cave": "\033[34m/\\\\\\n||||\n\\\\/\033[0m",
+            "village": "\033[33m[]  []\n  ||\033[0m",
+            "tavern": "\033[31m==]o[==\033[0m",
+            "tower": "\033[37m /\\\n/  \\\n|  |\n|  |\n|__|\033[0m",
+            "dungeon": "\033[90m[==]\\\\\n  ||\033[0m",
+            "lake": "\033[36m ~~~ \n~~~~~\033[0m",
+            "castle": "\033[37m/^^\\\n|[]|\n|  |\n\\__/\033[0m",
+            "library": "\033[35m||||\n|__|\033[0m",
+            "summit": "\033[37m  /\\\n /  \\\n/____\\\033[0m",
+        }
 
     def display_room(self):
         """Display current room information"""
@@ -216,6 +317,8 @@ class Game:
         
         print(f"\n--- {room.name} ---")
         print(room.description)
+        if hasattr(self, "room_art") and self.current_room in self.room_art:
+            print(self.room_art[self.current_room])
         
         if not room.visited:
             room.visited = True
@@ -289,6 +392,15 @@ class Game:
                     print("The amulet's power flows through you!")
                 elif item_name == "potion":
                     print("You feel refreshed and healed!")
+                elif item_name == "pearl":
+                    self.game_state["amulet_power"] += 1
+                    print("Bravery swells within you!")
+                elif item_name == "tome":
+                    self.game_state["amulet_power"] += 2
+                    print("Arcane knowledge courses through your mind!")
+                elif item_name == "feather":
+                    self.game_state["amulet_power"] += 1
+                    print("Courage surges as lightning crackles around you!")
                     
             else:
                 print(f"You can't use the {item.name} right now.")
@@ -465,6 +577,16 @@ class Game:
     def game_loop(self):
         """Main game loop"""
         print("="*60)
+        print("\033[35m")
+        print(r"""
+  __  __                             
+ |  \/  | __ _ _ __   __ _  ___  ___ 
+ | |\/| |/ _` | '_ \ / _` |/ _ \ / __|
+ | |  | | (_| | | | | (_| |  __/ \__ \
+ |_|  |_|\__,_|_| |_|\__, |\___/|___/
+                     |___/          
+""")
+        print("\033[0m")
         print("🧙‍♀️ Welcome to Megan's Journey! 🧙‍♀️")
         print("A magical text adventure awaits...")
         print("="*60)
