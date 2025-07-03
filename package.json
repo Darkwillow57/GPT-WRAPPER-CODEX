@@ -1,0 +1,16 @@
+{
+  "name": "gpt-wrapper",
+  "version": "1.0.0",
+  "description": "Personal GPT wrapper",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "formidable": "^3.5.4",
+    "multer": "^2.0.1",
+    "openai": "^4.15.0"
+  }
+}
