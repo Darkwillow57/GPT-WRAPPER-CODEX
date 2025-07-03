@@ -5,12 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "netlify dev"
+    "start": "netlify dev",
+    "test": "echo \"No tests specified\""
   },
   "dependencies": {
-    "form-data": "^4.0.0",
     "formidable": "^3.5.4",
-    "multer": "^2.0.1",
     "openai": "^4.15.0"
   }
 }
